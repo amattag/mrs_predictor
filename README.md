@@ -33,6 +33,6 @@ roslaunch mrs_predictor mrs_predictor.launch $world_file_name
 ```
 ### Contributors
 * Antonio Matta-Gómez
-* Antonio Barrientos Cruz
+* Antonio Barrientos Cruz, Phd.
 
 This meta-package is a **work in progress**, currently it is being used for testing in a Phd Thesis at **Universidad Politécnica de Madrid**. It holds a **BSD** license.
