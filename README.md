@@ -3,7 +3,7 @@
 This software system is composed of ROS packages, topics, and services. The scenarios are simulated using the Gazebo 3D 
 simulator and the Pedsim pedestrian simulator.
 <p align="center"> 
-<img src=https://github.com/amattag/mrs_predictor/blob/master/images/Patrolling-01.png width=800 align="center"/>
+<img src=https://github.com/amattag/mrs_predictor/blob/master/images/Patrolling-02.png width=800 align="center"/>
 </p>
 
 ### Features
