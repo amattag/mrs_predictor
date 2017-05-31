@@ -35,4 +35,4 @@ roslaunch mrs_predictor mrs_predictor.launch $world_file_name
 * Antonio Matta-Gómez
 * Antonio Barrientos Cruz
 
-The meta-package is a **work in progress**, currently it is being used for testing in a Phd Thesis. It holds a BSD license.
+This meta-package is a **work in progress**, currently it is being used for testing in a Phd Thesis at Universidad Politécnica de Madrid. It holds a BSD license.
