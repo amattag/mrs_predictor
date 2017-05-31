@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This scenario file was created by SGDiCoP on 2014-04-16T15:14:48-->
+<scenario>
+  <!--Waypoints-->
+  <waypoint id="wu" x="-8" y="-8" r="5" />
+  <waypoint id="wd" x="8" y="8" r="5" />
+  <waypoint id="wl" x="8" y="8" r="5" />
+  <waypoint id="wr" x="-8" y="-8" r="5" />
+  
+  <!--Agents-->
+  <agent x="-8" y="-8" n="10" dx="3" dy="3" type="0">
+    <addwaypoint id="wl" />
+    <addwaypoint id="wr" />
+  </agent>
+  <agent x="8" y="8" n="10" dx="3" dy="3" type="0">
+    <addwaypoint id="wu" />
+    <addwaypoint id="wd" />
+  </agent>
+  
+  <!--Obstacles-->
+  <!-- Horizontal Down-->
+  <obstacle x1="-10" y1="-10" x2="10" y2="-10" />
+  <!-- Vertical Right-->
+  <obstacle x1="10" y1="-10" x2="10" y2="10" />
+  <!-- Horizontal Up-->
+  <obstacle x1="10" y1="10" x2="-10" y2="10" />
+  <!-- Vertical Left-->
+  <obstacle x1="-10" y1="10" x2="-10" y2="-10" />
+</scenario>

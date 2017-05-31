@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Software License Agreement (BSD)
+
+\file      basic_world.xml
+\authors   Antonio Matta <antonio.matta@upm.es>
+\copyright Copyright (c) 2017, Universida Politecnica de Madrid., All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other materials provided with the distribution.
+ * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse or promote
+   products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WAR-
+RANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, IN-
+DIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Pedsim scenario showing a basic squared world with very few agents.
+
+Version: 1.0 $Id$: $file$ 2017-05-31
+-->
+<scenario>
+	<!--Obstacles-->
+  <!-- Horizontal Down-->
+  <obstacle x1="-10" y1="-10" x2="10" y2="-10" />
+  <!-- Vertical Right-->
+  <obstacle x1="11" y1="-10" x2="11" y2="10" />
+  <!-- Horizontal Up-->
+  <obstacle x1="10" y1="11" x2="-10" y2="11" />
+  <!-- Vertical Left-->
+  <obstacle x1="-10" y1="10" x2="-10" y2="-10" />
+  
+  <!--Waypoints-->
+  <waypoint id="wu" x="-8" y="-8" r="5" />
+  <waypoint id="wd" x="8" y="8" r="5" />
+  <waypoint id="wl" x="8" y="8" r="5" />
+  <waypoint id="wr" x="-8" y="-8" r="5" />
+  
+  <!--Agents-->
+  <agent x="-8" y="-8" n="5" dx="3" dy="3" type="0">
+    <addwaypoint id="wl" />
+    <addwaypoint id="wr" />
+  </agent>
+  <agent x="8" y="8" n="5" dx="3" dy="3" type="0">
+    <addwaypoint id="wu" />
+    <addwaypoint id="wd" />
+  </agent>
+</scenario>

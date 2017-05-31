@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!--
+Software License Agreement (BSD)
+
+\file      pedestrians.launch
+\authors   Antonio Matta <antonio.matta@upm.es>
+\copyright Copyright (c) 2017, Universida Politecnica de Madrid., All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+   following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other materials provided with the distribution.
+ * Neither the name of Clearpath Robotics nor the names of its contributors may be used to endorse or promote
+   products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WAR-
+RANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, IN-
+DIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Launch file to simulate pedestrians in Gazebo.
+
+Version: 1.0 $Id$: $file$ 2017-05-31
+-->
+<launch>
+	<!-- roslaunch arguments -->
+  <arg name="sim_ped" default="true"/>
+  
+  <!-- Launch PedSim simulator -->
+  <node name="pedsim_simulator" pkg="pedsim_simulator" type="pedsim_simulator" output="screen">
+      <!-- 0 - headless, 1 - minimal, 2 - full -->
+      <param name="visual_mode" value="0" type="int"/>
+      <param name="scene_file" value="$(find mrs_navigation)scenarios/empty_world.xml" type="string"/>
+      <param name="default_queue_size" value="10"/>
+      <param name="max_robot_speed" value="1.5" type="double"/>
+      <param name="robot_mode" value="1" type="int"/>
+      <param name="enable_groups" value="true" type="bool"/>
+  </node>
+  
+  <!-- Launch RVIZ -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find mrs_navigation)/rviz/pedestrians.rviz"/>
+  
+  <!-- start gazebo with an empty World -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="debug" default="false"/>
+  <arg name="gui" default="true"/>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="worlds/empty.world" />
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="headless" value="false" />
+  </include>
+  <node name="pedestrians" pkg="gazebo_ros" type="spawn_model" args="-urdf" respawn="false" output="screen"/>
+  
+  <!-- Simulate pedestrians in Gazebo -->
+  <node name="simulate_pedestrians" pkg="mrs_datmo" type="simulate_pedestrians.py" respawn="false" output="screen" if="$(arg sim_ped)"/>
+  
+</launch>
