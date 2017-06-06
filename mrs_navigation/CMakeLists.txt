@@ -106,7 +106,7 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-#add_executable(mrs_send_wps src/send_wps.cpp)
+#add_executable()
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
