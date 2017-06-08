@@ -40,56 +40,116 @@
 # Version: 1.0.0 $Id$: $file$ 2017-06-05
 
 import rospy
+import math
+from sensor_msgs.msg	import	LaserScan
+from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Pose
 
 # Pedsim-ros libraries
-from pedsim_msgs.msg import TrackedPersons
+from pedsim_msgs.msg import TrackedPersons, TrackedPerson
 
-def motion_tracking(TrackedPersons):
+def motion_tracking(msg):
 	"""
-	simulate_people: It associates the items stored in the TrackedPersons list
+	motion_tracking: It associates the items stored in the TrackedPersons list
 	to its correspondent robot.
 	
 	Parameters:
 	-----------
 	TrackedPersons: Pedsim ROS message
-	
 	  A list with the people present in a pedsim_ros simulation.
-	
-	stepsN: int
-	  Number of steps in the model.
 	
 	Returns:
 	--------
-	A : array of floats.
-	  Transition Probability Matrix. 
+	TrackedPersons : a TrackedPersons msg
+	  a message that contains a list of tracked persons.
 	"""
-	
-	trackPublisher.publish(TrackedPersons)
+	global seqCounter
+	robotTrackedPersons = TrackedPersons()
+	robotTrackedPersons.header.seq = seqCounter
+	robotTrackedPersons.header.frame_id = "odom"
+	robotTrackedPersons.header.stamp = rospy.Time.now()
 	
 	# For each tracked person...
-	#for tracked_person in TrackedPersons.tracks:
-		## Set the figure name.
-		#subjectId = tracked_person.track_id
-		#tracked_person.is_matched = True
+	for tracked_person in msg.tracks:
+		# Find position between TrackedPerson and robot.
+		distance = math.sqrt( math.pow((g_robot_pose.position.x - tracked_person.pose.pose.position.x), 2) \
+		                     + math.pow((g_robot_pose.position.y - tracked_person.pose.pose.position.y),2) )
 		
-	#rospy.Publisher('/pedsim/tracked_persons', TrackedPersons)
+		if distance < g_range_ahead:
+			tracked_person.is_matched = True
+			trackedPerson = TrackedPerson()
+			trackedPerson.track_id = tracked_person.track_id
+			trackedPerson.is_occluded = tracked_person.is_occluded
+			trackedPerson.is_matched = True
+			trackedPerson.detection_id = tracked_person.detection_id
+			trackedPerson.age = tracked_person.age
+			trackedPerson.pose = tracked_person.pose
+			trackedPerson.twist = tracked_person.twist
+			robotTrackedPersons.tracks.append(trackedPerson)
+					
+	trackPublisher.publish(robotTrackedPersons)
+	seqCounter += 1
+					
+def laser_callback(Scan):
+	"""
+	laser_callback: It reads a laser scan and computes its range.
+	
+	Parameters:
+	-----------
+	Scan: LaserScan message
+	
+	  A ROS LaserScan message.
+	
+	Returns:
+	--------
+	g_range_ahead : float
+	  The Laser range.
+	"""
+	global g_range_ahead
+	g_range_ahead = Scan.ranges[len(Scan.ranges)/2]
+	
+def odometry_callback(msg):
+	"""
+	odometry_callback: It Gets the current pose of the robot.
+	
+	Parameters:
+	-----------
+	msg: ROS Odometry message
+	  Odometry of the robot.
+	
+	Returns:
+	--------
+	g_robot_pose : a ROS Pose msg.
+	  a message that contains the current pose of the robot.
+	"""
+	global g_robot_pose
+	g_robot_pose = msg.pose.pose
+	
 		 
 if __name__ == '__main__':
 	try:
-		trackPublisher = rospy.Publisher('/summit1/tracked_persons', TrackedPersons, queue_size=10)
-		# Init ros node.
-		rospy.init_node('motion_tracking',log_level=rospy.INFO)
-		rate = rospy.Rate(10)
 		
-		# Subscribe to PedSim tracked_persons list
+		# Robot TrackedPersons msg to be published.
+		trackPublisher = rospy.Publisher('/summit1/tracked_persons', TrackedPersons, queue_size=10)
+		
+		# Init ROS node.
+		rospy.init_node('motion_tracking',log_level=rospy.INFO)
+		
+		# Subscribe to the robot's laser.
+		g_range_ahead	=	0.0	
+		scan_sub	=	rospy.Subscriber('/summit1/base_scan', LaserScan, laser_callback)
+		
+		# Subscribe to the robot's Odometry.
+		g_robot_pose = Pose()
+		rospy.Subscriber('/summit1/odom', Odometry, odometry_callback)
+		
+		# Subscribe to PedSim TrackedPersons tracks list.
+		seqCounter = 0
 		trackedPersonsTopic = "/pedsim/tracked_persons"
 		rospy.Subscriber(trackedPersonsTopic, TrackedPersons, motion_tracking)
 		rospy.loginfo("Subscribing to " + trackedPersonsTopic)
 		
-		rate.sleep()
-	
-		# spin() simply keeps python from exiting until this node is stopped
+		# Keeps python from exiting until this node is stopped.
 		rospy.spin()
 		
 	except rospy.ROSInterruptException:
