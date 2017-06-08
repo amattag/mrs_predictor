@@ -57,10 +57,7 @@ def simulate_people(TrackedPersons):
 	-----------
 	TrackedPersons: Pedsim ROS message
 	
-	  A list with the people present in a pedsim_ros simulation.
-	
-	stepsN: int
-	  Number of steps in the model. 
+	  A list with the people present in a pedsim_ros simulation. 
 	"""
 	# Initial pose of the cylinder
 	initial_pose = Pose()
