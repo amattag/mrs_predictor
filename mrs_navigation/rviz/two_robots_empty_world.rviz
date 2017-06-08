@@ -9,7 +9,6 @@ Panels:
         - /Grid1/Offset1
         - /Pedsim-Visuals1
         - /Tracking-Visuals1
-        - /Tracking-Visuals1/TrackedPersons1
       Splitter Ratio: 0.712794
     Tree Height: 776
   - Class: rviz/Selection
@@ -95,7 +94,7 @@ Visualization Manager:
           Color map offset: 0
           Color transform: Flat
           Delete after no. cycles: 5
-          Enabled: true
+          Enabled: false
           Excluded person IDs: ""
           Font color: 255; 255; 255
           Font color style: Same color
@@ -127,7 +126,7 @@ Visualization Manager:
             Scaling factor: 1
             Value: Person meshes
           Topic: /pedsim/tracked_persons
-          Value: true
+          Value: false
           Z offset:
             Use Z position from message: false
             Value: 0
@@ -291,6 +290,48 @@ Visualization Manager:
         Z: 0
       Topic: /summit1/move_base_node/NavfnROS/plan
       Value: true
+    - Alpha: 1
+      Class: spencer_tracking_rviz_plugin/TrackedPersons
+      Color: 130; 130; 130
+      Color map offset: 0
+      Color transform: Rainbow
+      Delete after no. cycles: 100
+      Enabled: true
+      Excluded person IDs: ""
+      Font color: 255; 255; 255
+      Font color style: Same color
+      Font scale: 2
+      History as line:
+        Line width: 0.05
+        Value: true
+      History size: 100
+      Included person IDs: ""
+      Min. history point distance: 0.4
+      Missed alpha: 0.5
+      Name: Summit1-TrackedPersons
+      Occlusion alpha: 0.3
+      Render covariances:
+        Line width: 0.1
+        Value: true
+      Render detection IDs: false
+      Render history: false
+      Render person visual: true
+      Render track IDs: true
+      Render track state: true
+      Render velocities: false
+      Show DELETED tracks: false
+      Show MATCHED tracks: true
+      Show MISSED tracks: false
+      Show OCCLUDED tracks: false
+      Style:
+        Line width: 0.05
+        Scaling factor: 1
+        Value: Person meshes
+      Topic: /summit1/tracked_persons
+      Value: true
+      Z offset:
+        Use Z position from message: false
+        Value: 0
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
