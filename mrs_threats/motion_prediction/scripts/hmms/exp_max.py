@@ -213,7 +213,7 @@ def maximization(tjcs, clusters, means, zero):
         zero(means[m])
         for n in xrange(tjcsN):
 			means[m] += clusters[n, m]*tjcs[n]
-        means[m] /= np.sum(clusters[:, m]) # Normalize
+    means[m] /= np.sum(clusters[:, m]) # Normalize
         
             
 # Functions to optimize the quality of the clusters.
