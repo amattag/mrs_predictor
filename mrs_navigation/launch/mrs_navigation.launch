@@ -23,7 +23,7 @@ OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTE
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Main Launch file.
+Main Navigation file.
 
 Version: 1.0 $Id$: $file$ 2017-05-31
 -->
@@ -34,6 +34,11 @@ Version: 1.0 $Id$: $file$ 2017-05-31
   <param name="/use_sim_time" value="true"/>
   <arg name="sim_ped" default="false"/>
   <arg name="world_name"/>
+  
+  <!-- Robots -->
+  <arg name="summit1" default="true"/>
+	<arg name="summit2" default="true"/>
+	<arg name="summit3" default="false"/>
   
   <!-- Launch PedSim simulator -->
   <node name="pedsim_simulator" pkg="pedsim_simulator" type="pedsim_simulator" output="screen">
@@ -49,19 +54,27 @@ Version: 1.0 $Id$: $file$ 2017-05-31
   <!-- Send map to the ROS Map Server -->
   <node pkg="map_server" type="map_server" name="map_server" args="$(find mrs_navigation)/maps/$(arg world_name)_map.yaml" respawn="false" >
     <param name="frame_id" value="/map" /> 
-  </node>   
+  </node>
   
   <!-- Start Gazebo and the associated world--> 
-  <include file="$(find mrs_navigation)/launch/$(arg world_name).launch"/>
-
-  <!-- Start the Multi-Robot System -->
-  <include file="$(find mrs_navigation)/launch/robots.launch"/>
+  <include file="$(find mrs_navigation)/launch/$(arg world_name).launch"/>   
   
-  <!-- Launch RVIZ -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mrs_navigation)/rviz/two_robots_$(arg world_name).rviz"/>
+  <!-- Start the Multi-Robot System -->
+  <include file="$(find mrs_navigation)/launch/$(arg world_name)_robots.launch">
+		<arg name="robot1" value="$(arg summit1)" />
+		<arg name="robot2" value="$(arg summit2)" />
+		<arg name="robot3" value="$(arg summit3)" />
+  </include> 
   
   <!-- Launch Dummy Transform -->
   <node name="dummy_transform" pkg="pedsim_simulator"  type="dummy_transforms.py" respawn="false" output="screen"/>
+  
+  <!-- Launch Patrolling -->
+  <include file="$(find mrs_navigation)/launch/$(arg world_name)_patrolling.launch">
+		<arg name="robot1" value="$(arg summit1)" />
+		<arg name="robot2" value="$(arg summit2)" />
+		<arg name="robot3" value="$(arg summit3)" />
+  </include>
   
   <!-- Simulate pedestrians in Gazebo -->
   <node name="simulate_pedestrians" pkg="mrs_datmo"  type="simulate_pedestrians.py" respawn="false" output="screen" if="$(arg sim_ped)"/>
