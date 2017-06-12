@@ -49,13 +49,86 @@ from smach import StateMachine
 from smach_ros import SimpleActionState
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from geometry_msgs.msg import Quaternion
-            
+
+#import local msgs
+from mrs_navigation.msg import RobotStatus
+
+def teamStatus_callback(msgRobotStatus):
+	"""
+	teamStatus_callback: It checks if all the robots are ready.
+	
+	Parameters:
+	-----------
+	msgRobotStatus: ROS RobotStatus message
+	  Status of the mrs_monitor node.
+	
+	Returns:
+	--------
+	team_ready : bool.
+	  bool variable set to True or False.
+	"""
+	global team_ready
+	global print_ready
+	# Check if message came from monitor.
+	if msgRobotStatus.header.frame_id == "monitor":
+		if not print_ready:
+			rospy.loginfo("Robot %s: Team is ready. Let's move!", robot_name)
+			print_ready = True
+		team_ready = True
+		
+def publish_readyStatus():
+	"""
+	publish_readyStatus: It publishes the state of the robot.
+	
+	Parameters: 
+	-----------
+	None.
+	
+	Returns:
+	--------
+	status_msg : ROS RobotStatus message.
+	  A ROS msg with the current robot status (ready or Notready).
+	"""
+	global status_msg
+	status_msg = RobotStatus()
+	status_msg.header.stamp = rospy.Time.now()
+	status_msg.robot_id = robot_name
+	status_msg.is_ready = True
+	
+	# Wait for the publisher to connect to subscribers.
+	rospy.sleep(3)
+	team_status_pub.publish(status_msg)
+	rospy.loginfo("Robot %s published ready status", robot_name)
+	
+def wait_forTeam():
+	"""
+	wait_forTeam: It waits for all the robots to be ready.
+	
+	Parameters:
+	-----------
+	None
+	
+	Returns:
+	--------
+	team_ready : bool.
+	  bool variable set to True or False.
+	"""
+	global team_ready
+	rate	=	rospy.Rate(1)
+	# Wait until all robots are ready...
+	while not team_ready:
+		rospy.loginfo("Robot %s: waiting for team", robot_name)
+		team_status_pub.publish(status_msg)
+		rate.sleep()
+		          
 if __name__ == '__main__':
 	try:
+		team_ready = False
+		print_ready = False
 		# Create a ROS node.
 		rospy.init_node('patrol_fsm')
 		
-		# Fetch params.
+		# Fetch incomming params.
 		robot_name = rospy.get_param('~robot_name')
 		robot_wps = rospy.get_param('~waypoints')
 		
@@ -64,6 +137,8 @@ if __name__ == '__main__':
 		for i, point in enumerate(robot_wps):
 			# Append state name.
 			robot_wps[i].append(str(i+1))
+			
+		rospy.loginfo("Starting robot %s", robot_name)
 		
 		# Create the string "robot_name/move_base"
 		move_base_robot = robot_name + "/move_base"
@@ -96,8 +171,18 @@ if __name__ == '__main__':
 				                  SimpleActionState(move_base_robot, MoveBaseAction, goal=goal_pose), 
 												  transitions={'succeeded': robot_wps[(i + 1) % len(robot_wps)][3]}
 												)
+												
+		# Publish and subscribe to team status messages.
+		team_status_pub = rospy.Publisher('/mrs_predictor/team_status', RobotStatus, queue_size=10) 
+		team_status_sub = rospy.Subscriber('/mrs_predictor/team_status', RobotStatus, teamStatus_callback)
+		
+		# Publish a status message when the robot is ready
+		publish_readyStatus()
+		
+		# Wait for all the robots to be ready.
+		wait_forTeam() 
 	
-		#It sends each goal to the Nav Stack and waits for it to terminate.
+		#It sends each goal to the Nav Stack.
 		patrol.execute()
 		
 	except rospy.ROSInterruptException: pass
