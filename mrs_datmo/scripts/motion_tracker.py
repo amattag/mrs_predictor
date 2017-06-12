@@ -128,20 +128,27 @@ def odometry_callback(msg):
 		 
 if __name__ == '__main__':
 	try:
-		
-		# Robot TrackedPersons msg to be published.
-		trackPublisher = rospy.Publisher('/summit1/tracked_persons', TrackedPersons, queue_size=10)
-		
 		# Init ROS node.
 		rospy.init_node('motion_tracking',log_level=rospy.INFO)
 		
+		# Fetch incommint params.
+		robot_name = rospy.get_param('~robot_name')
+		
+		# Create the string to name the publisher topic.
+		publisher_topic_name = robot_name + "/tracked_persons"
+		
+		# Robot TrackedPersons msg to be published.
+		trackPublisher = rospy.Publisher(publisher_topic_name, TrackedPersons, queue_size=10)
+		
 		# Subscribe to the robot's laser.
 		g_range_ahead	=	0.0	
-		scan_sub	=	rospy.Subscriber('/summit1/base_scan', LaserScan, laser_callback)
+		robot_base_scan = robot_name + "/base_scan"
+		scan_sub	=	rospy.Subscriber(robot_base_scan, LaserScan, laser_callback)
 		
 		# Subscribe to the robot's Odometry.
 		g_robot_pose = Pose()
-		rospy.Subscriber('/summit1/odom', Odometry, odometry_callback)
+		robot_odometry = robot_name + "/odom"
+		rospy.Subscriber(robot_odometry, Odometry, odometry_callback)
 		
 		# Subscribe to PedSim TrackedPersons tracks list.
 		seqCounter = 0
