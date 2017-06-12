@@ -28,7 +28,6 @@ Launch file to spawn an empty world in Gazebo.
 Version: 1.0 $Id$: $file$ 2017-05-31
 -->
 <launch>
-
   <!-- We carry the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find mrs_navigation)/worlds/empty.world"/>
@@ -38,5 +37,4 @@ Version: 1.0 $Id$: $file$ 2017-05-31
     <arg name="headless" value="false"/>
     <arg name="debug" value="false"/>
   </include>
-
 </launch>
