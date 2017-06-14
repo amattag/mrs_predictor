@@ -2,7 +2,7 @@
 <package>
   <name>motion_prediction</name>
   <version>1.0.0</version>
-  <description>Motion_prediction of pedestrians</description>
+  <description>Motion prediction of pedestrians</description>
   
   <author email="antonio.matta@upm.es">Antonio Matta</author>
   <maintainer email="antonio.matta@upm.es">Antonio Matta</maintainer>
