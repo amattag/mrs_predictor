@@ -37,7 +37,7 @@ Version: 1.0 $Id$: $file$ 2017-06-11
   <arg name="robots_number"/>
   <!-- Robots -->
   <arg name="robot1" default="true"/>
-	<arg name="robot2" default="false"/>
+	<arg name="robot2" default="true"/>
 	<arg name="robot3" default="false"/>
 	
 	<!-- Launch mrs_monitor node -->
@@ -53,13 +53,13 @@ Version: 1.0 $Id$: $file$ 2017-06-11
 		<arg name="summit3" value="$(arg robot3)" />
   </include> 
   
-  <!-- Start Tracking -->
+  <!-- Start Tracking
   <include file="$(find mrs_datmo)/launch/$(arg world_file)_tracking.launch">
 		<arg name="robot1" value="$(arg robot1)" />
 		<arg name="robot2" value="$(arg robot2)" />
 		<arg name="robot3" value="$(arg robot3)" />
   </include> 
-  
+  -->
   
   
 </launch>
