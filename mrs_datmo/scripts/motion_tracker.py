@@ -88,6 +88,7 @@ def motion_tracking(msg):
 			robotTrackedPersons.tracks.append(trackedPerson)
 					
 	trackPublisher.publish(robotTrackedPersons)
+	global_track_publisher.publish(msg)
 	seqCounter += 1
 					
 def laser_callback(Scan):
@@ -136,9 +137,13 @@ if __name__ == '__main__':
 		
 		# Create the string to name the publisher topic.
 		publisher_topic_name = robot_name + "/tracked_persons"
+		globalList_topic_name = "/global_tracked_persons"
 		
 		# Robot TrackedPersons msg to be published.
 		trackPublisher = rospy.Publisher(publisher_topic_name, TrackedPersons, queue_size=10)
+		
+		# Global TrackedPersons msg to be published.
+		global_track_publisher = rospy.Publisher(globalList_topic_name, TrackedPersons, queue_size=10)
 		
 		# Subscribe to the robot's laser.
 		g_range_ahead	=	0.0	
