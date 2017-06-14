@@ -29,7 +29,7 @@ Version: 1.0 $Id$: $file$ 2017-05-31
 -->
 <launch>
 	<arg name="robot1" default="true"/>
-	<arg name="robot2" default="false"/>
+	<arg name="robot2" default="true"/>
 	<arg name="robot3" default="false"/>
   
   <!-- ROBOT 1 -->
