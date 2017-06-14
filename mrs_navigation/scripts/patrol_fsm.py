@@ -146,7 +146,8 @@ if __name__ == '__main__':
 		# Create a SMACH State Machine.
 		patrol = StateMachine(['succeeded', 'aborted', 'preempted'])
 		
-		# Construct Action Goals from the Waypoint list.
+		# Construct Action Goals from the Waypoint list,
+		# and populate the patrol state machine with states.
 		with patrol:
 			for i, w in enumerate(robot_wps):		
 				# Define the Goal.
