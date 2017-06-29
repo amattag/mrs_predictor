@@ -29,7 +29,7 @@ catkin_make
 ```
 ### Sample usage
 ```
-roslaunch mrs_predictor mrs_predictor.launch world_name:="$world_file_name" robots_number:=$number_of_robots
+roslaunch mrs_monitor mrs_monitor.launch world_file:="$world_file_name" robots_number:=$number_of_robots
 ```
 ### Contributors
 * Antonio Matta-Gómez
